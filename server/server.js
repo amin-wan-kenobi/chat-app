@@ -16,9 +16,21 @@ app.use(express.static(publicPath));
 //below socket is similar to the socket we defined in html
 io.on('connection', (socket) => {
     console.log('New user connected');
+    
     socket.on('disconnect', () => {
         console.log('Client disconnected');
     });
+
+    socket.emit('newMessage', {
+        from: 'Sender',
+        text: 'Hello Client Message',
+        createdAt: new Date().getTime()
+    });
+
+    socket.on('createMessage', (newMessage) => {
+        console.log('newMessage Received from Client', newMessage);
+    });
+
 });
 
 
