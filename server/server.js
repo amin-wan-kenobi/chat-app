@@ -21,14 +21,19 @@ io.on('connection', (socket) => {
         console.log('Client disconnected');
     });
 
-    socket.emit('newMessage', {
-        from: 'Sender',
-        text: 'Hello Client Message',
-        createdAt: new Date().getTime()
-    });
+    // socket.emit('newMessage', {
+    //     from: 'Sender',
+    //     text: 'Hello Client Message',
+    //     createdAt: new Date().getTime()
+    // });
 
     socket.on('createMessage', (newMessage) => {
         console.log('newMessage Received from Client', newMessage);
+        io.emit('newMessage', {
+            from: newMessage.from,
+            text: newMessage.text,
+            createdAt: new Date().getTime()
+        });
     });
 
 });
