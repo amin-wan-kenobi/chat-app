@@ -18,6 +18,7 @@ socket.on('newMessage', function (message) {
     li.text(`${message.from}: ${message.text}`);
 
     jQuery('#messages').append(li);
+    jQuery('[name=message]').val('');
 });
 
 // socket.emit('createMessage', {
