@@ -36,8 +36,9 @@ io.on('connection', (socket) => {
         callback({ message: 'All Well on Server Side' });
     });
 
-    socket.on('createLocationMessage', (coords) => {
+    socket.on('createLocationMessage', (coords, callback) => {
         io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
+        callback('Location sent to all');
     });
 
 });
