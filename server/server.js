@@ -16,20 +16,34 @@ app.use(express.static(publicPath));
 //below socket is similar to the socket we defined in html
 io.on('connection', (socket) => {
     console.log('New user connected');
-    
+
+    //Now user is connected so we greet the user
+    socket.emit('newMessage', {
+        from: 'Admin',
+        text: 'Hello from Admin and welcome to this server',
+        createdAt: new Date().getTime()
+    });
+
+    //Someone joined and others will get a message not the person who joined
+    socket.broadcast.emit('newMessage', {
+        from: 'Admin',
+        text: 'Someone just joined this server',
+        createdAt: new Date().getTime()
+    });
+
     socket.on('disconnect', () => {
         console.log('Client disconnected');
     });
 
-    // socket.emit('newMessage', {
-    //     from: 'Sender',
-    //     text: 'Hello Client Message',
-    //     createdAt: new Date().getTime()
-    // });
-
     socket.on('createMessage', (newMessage) => {
         console.log('newMessage Received from Client', newMessage);
-        io.emit('newMessage', {
+        // io.emit('newMessage', {
+        //     from: newMessage.from,
+        //     text: newMessage.text,
+        //     createdAt: new Date().getTime()
+        // });
+        //Above will emit to all
+        socket.broadcast.emit('newMessage', {
             from: newMessage.from,
             text: newMessage.text,
             createdAt: new Date().getTime()
