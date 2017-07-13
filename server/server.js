@@ -19,7 +19,7 @@ io.on('connection', (socket) => {
     console.log('New user connected');
 
     //Now user is connected so we greet the user
-    socket.emit('newMessage', generateMessage('Admin', 'Welcome to the App'));
+    socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat App'));
 
     //Someone joined and others will get a message not the person who joined
     socket.broadcast.emit('newMessage', generateMessage('Admin', 'New User Joined'));
@@ -28,15 +28,12 @@ io.on('connection', (socket) => {
         console.log('Client disconnected');
     });
 
-    socket.on('createMessage', (newMessage) => {
-        console.log('newMessage Received from Client', newMessage);
-        // io.emit('newMessage', {
-        //     from: newMessage.from,
-        //     text: newMessage.text,
-        //     createdAt: new Date().getTime()
-        // });
+    socket.on('createMessage', (newMessage, callback) => {
+        console.log('Client Message', newMessage);
+        io.emit('newMessage', generateMessage(newMessage.from, newMessage.text));
         //Above will emit to all
-        socket.broadcast.emit('newMessage', generateMessage(newMessage.from, newMessage.text));
+        //socket.broadcast.emit('newMessage', generateMessage(newMessage.from, newMessage.text));
+        callback({message: 'All Well on Server Side'});
     });
 
 });
