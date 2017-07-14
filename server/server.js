@@ -4,6 +4,7 @@ const express = require('express');
 const socketIO = require('socket.io');
 
 const { generateMessage, generateLocationMessage } = require('./utils/message');
+const {isRealString} = require('./utils/validation');
 const publicPath = path.join(__dirname, '..', '/public');
 //const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
@@ -16,13 +17,21 @@ app.use(express.static(publicPath));
 
 //below socket is similar to the socket we defined in html
 io.on('connection', (socket) => {
-    console.log('New user connected', socket.userDetails);
+    console.log('New user connected');
 
     //Now user is connected so we greet the user
     socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat App'));
 
     //Someone joined and others will get a message not the person who joined
     socket.broadcast.emit('newMessage', generateMessage('Admin', 'New User Joined'));
+
+    socket.on('join', (params, callback) => {
+        if(!isRealString(params.name) || !isRealString(params.room)){
+            callback('Name and Room are required');
+        }
+
+        callback();
+    });
 
     socket.on('disconnect', () => {
         console.log('Client disconnected');
@@ -40,6 +49,8 @@ io.on('connection', (socket) => {
         io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
         callback('Location sent to all');
     });
+
+    
 
 });
 
