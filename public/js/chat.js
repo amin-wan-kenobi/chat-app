@@ -1,6 +1,5 @@
 var socket = io();
 
-
 function scrollToBottom() {
 
     //Selectors first

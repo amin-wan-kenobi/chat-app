@@ -16,7 +16,7 @@ app.use(express.static(publicPath));
 
 //below socket is similar to the socket we defined in html
 io.on('connection', (socket) => {
-    console.log('New user connected');
+    console.log('New user connected', socket.userDetails);
 
     //Now user is connected so we greet the user
     socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat App'));
